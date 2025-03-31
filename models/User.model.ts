@@ -1,14 +1,27 @@
 import { Schema, model, models } from "mongoose";
 
+export interface UserDocument{
+  name: string;
+  email: string;
+  password: string;
+  role: string;
+  profileImage: string;
+  createdAt: Date;
+}
+
 const userSchema = new Schema(
   {
     name: {
       type: String,
-      required: true,
+      required: [true, "Please add a name"],
     },
     email: {
       type: String,
-      required: true,
+      required: [true, "Please add an email"],
+      match: [
+        /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+        "Email is invalid",
+      ],
       unique: true,
     },
     password: {
@@ -33,4 +46,4 @@ const userSchema = new Schema(
   }
 );
 
-export default models.User || model("User", userSchema);
+export default models.User || model<UserDocument>("User", userSchema);
